@@ -57,7 +57,7 @@ const SearchForm = () => {
   }
 
   return (
-    <search>
+    <search data-testid="search-form">
       <form onSubmit={handleSubmit}>
         <label
           className="block"
@@ -101,7 +101,10 @@ const SearchHistory = () => {
   return (
     <>
       {searchHistory.length > 0 && (
-        <nav className="mt-2">
+        <nav
+          className="mt-2"
+          data-testid="search-history"
+        >
           <label>History</label>
           <ul
             className="list-inside list-[square]"
@@ -130,6 +133,7 @@ const LeftSideBar = () => {
     <aside
       id="left-panel"
       className="left-sidebar"
+      data-testid="left-sidebar"
     >
       <SearchForm />
       <SearchHistory />
