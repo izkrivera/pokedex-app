@@ -1,5 +1,5 @@
 'use client';
-import { FC, FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useLazyGetPokemonByNameQuery } from '@/api/pokemonService';
 import { addEntry, setStatus } from '@/redux/searchHistorySlice';
@@ -10,10 +10,11 @@ interface SubcomponentProps {
   dispatch: Dispatcher;
 }
 
-const SearchForm: FC<SubcomponentProps> = ({ dispatch }) => {
+export function useSearch() {
+  const dispatch = useAppDispatch();
   const [searchName, setSearchName] = useState<string>('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const [triggerGetPokemon, { isLoading, isFetching, data: pokemon, error }] =
+  const [getPokemonByName, { isLoading, isFetching, data: pokemon, error }] =
     useLazyGetPokemonByNameQuery();
 
   const loading = isLoading || isFetching;
@@ -28,14 +29,33 @@ const SearchForm: FC<SubcomponentProps> = ({ dispatch }) => {
     }
   }, [loading, pokemon, error, dispatch]);
 
+  return {
+    searchName,
+    setSearchName,
+    inputRef,
+    getPokemonByName,
+    result: { loading, pokemon, error },
+  };
+}
+
+const SearchForm = () => {
+  const {
+    searchName,
+    setSearchName,
+    inputRef,
+    getPokemonByName,
+    result: { loading },
+  } = useSearch();
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (searchName) {
-      triggerGetPokemon(searchName, true);
+      getPokemonByName(searchName, true);
     }
     setSearchName('');
     inputRef.current?.focus();
   }
+
   return (
     <search>
       <form onSubmit={handleSubmit}>
@@ -73,7 +93,8 @@ const SearchForm: FC<SubcomponentProps> = ({ dispatch }) => {
   );
 };
 
-const SearchHistory: FC<SubcomponentProps> = ({ dispatch }) => {
+const SearchHistory = () => {
+  const dispatch = useAppDispatch();
   const searchHistory = useAppSelector(
     (state) => state.searchHistory.value.history,
   );
@@ -105,14 +126,13 @@ const SearchHistory: FC<SubcomponentProps> = ({ dispatch }) => {
 };
 
 const LeftSideBar = () => {
-  const dispatch = useAppDispatch();
   return (
     <aside
       id="left-panel"
       className="left-sidebar"
     >
-      <SearchForm dispatch={dispatch} />
-      <SearchHistory dispatch={dispatch} />
+      <SearchForm />
+      <SearchHistory />
     </aside>
   );
 };
