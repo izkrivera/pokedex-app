@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -7,14 +7,33 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      white: '#ffffff',
+      black: '#000000',
+      red: '#DC0C2D',
+      'light-red': '#E9677C',
+      'light-gray': '#D9D9D9',
+      gray: '#7E7E7E',
+      'dark-gray': '#272727',
+      green: '#51AD5C',
+      'light-blue': '#1FB0FD',
+      blue: '#2AAAFD',
+      'dark-blue': '#18699F',
+      yellow: '#F0DE25',
+      'dark-yellow': '#A5900A',
+    },
+    listStyleType: {
+      none: 'none',
+      square: 'square',
+    },
     extend: {
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      gridTemplateColumns: {
+        main: '285px, minmax(auto, 995px)',
       },
     },
   },
   plugins: [],
-}
-export default config
+};
+export default config;

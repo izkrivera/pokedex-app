@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+  --foreground-hex: #272727;
+  --background-hex: #dc0c2d;
+  --main-background-hex: #ffffff;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: var(--foreground-hex);
+  background: var(--background-hex);
+}
+
+body main {
+  background: var(--main-background-hex);
+}
+
+@layer base {
+  input,
+  textarea,
+  button,
+  a {
+    @apply outline-none hover:outline-none active:outline-none focus:outline-none focus-within:outline-none;
+  }
 }
