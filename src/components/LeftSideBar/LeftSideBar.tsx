@@ -1,14 +1,33 @@
 'use client';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import { useLazyGetPokemonByNameQuery } from '@/api/pokemonService';
 
 const LeftSideBar = () => {
   const [searchName, setSearchName] = useState<string>('');
 
+  const [triggerGetPokemon, { isLoading, isFetching, data: pokemon, error }] =
+    useLazyGetPokemonByNameQuery();
+
+  const loading = isLoading || isFetching;
+
+  useEffect(() => {
+    if (loading) {
+      console.info('-> LeftSideBar.triggerGetPokemon(), LOADING...');
+    } else if (error) {
+      console.info('-> LeftSideBar.triggerGetPokemon(), ERROR:', error);
+    } else if (pokemon) {
+      console.info('-> LeftSideBar.triggerGetPokemon(), POKEMON:', pokemon);
+    }
+  }, [loading, pokemon, error]);
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     console.group('(***) LeftSideBar.handleSubmit()');
-    console.info('\t-> event:', event);
+    console.info('\t-> searchName:', searchName);
     console.groupEnd();
+    if (searchName) {
+      triggerGetPokemon(searchName, true);
+    }
 
     setSearchName('');
   }
