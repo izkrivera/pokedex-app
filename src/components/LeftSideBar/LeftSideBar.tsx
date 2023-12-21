@@ -1,5 +1,5 @@
 'use client';
-import { FC, FormEvent, useEffect, useState } from 'react';
+import { FC, FormEvent, useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { useLazyGetPokemonByNameQuery } from '@/api/pokemonService';
 import { addEntry, setStatus } from '@/redux/searchHistorySlice';
@@ -12,6 +12,7 @@ interface SubcomponentProps {
 
 const SearchForm: FC<SubcomponentProps> = ({ dispatch }) => {
   const [searchName, setSearchName] = useState<string>('');
+  const inputRef = useRef<HTMLInputElement>(null);
   const [triggerGetPokemon, { isLoading, isFetching, data: pokemon, error }] =
     useLazyGetPokemonByNameQuery();
 
@@ -33,6 +34,7 @@ const SearchForm: FC<SubcomponentProps> = ({ dispatch }) => {
       triggerGetPokemon(searchName, true);
     }
     setSearchName('');
+    inputRef.current?.focus();
   }
   return (
     <search>
@@ -49,6 +51,8 @@ const SearchForm: FC<SubcomponentProps> = ({ dispatch }) => {
             id="search"
             name="search"
             type="text"
+            ref={inputRef}
+            autoFocus={true}
             placeholder="Pokemon name..."
             value={searchName}
             onChange={(event) =>

@@ -2,9 +2,9 @@
 import { FC, ReactNode } from 'react';
 import { useAppSelector } from '@/redux/hooks';
 import Image from 'next/image';
-import type { Pokemon, PokemonAbility } from '@/types/pokemon';
+import type { Pokemon, PokemonAbility, PokemonSprites } from '@/types/pokemon';
 import type { SearchStatus } from '@/types/model';
-import type { ColorNames } from '@/types/ui';
+import { DEFAULT_IMAGE } from '@/config';
 
 type PokemonKeys = Extract<keyof Pokemon, 'name' | 'height' | 'weight'>;
 type PokemonProps = {
@@ -12,6 +12,24 @@ type PokemonProps = {
 };
 
 const displayKeys: PokemonKeys[] = ['name', 'height', 'weight'] as const;
+
+type PokemonSpriteKeys = Exclude<keyof PokemonSprites, 'other' | 'versions'> &
+  string;
+
+const pokemonSpriteKeysList: { [K in PokemonSpriteKeys]: true } = {
+  front_default: true,
+  front_shiny: true,
+  front_female: true,
+  front_shiny_female: true,
+  back_default: true,
+  back_shiny: true,
+  back_female: true,
+  back_shiny_female: true,
+} as const;
+
+function isPokemonSpriteKey(key: string): key is PokemonSpriteKeys {
+  return pokemonSpriteKeysList[key as PokemonSpriteKeys] === true;
+}
 
 interface AttributeRowProps {
   name: string;
@@ -79,6 +97,65 @@ const AbilitiesList: FC<AbilitiesListProps> = ({ abilities }) => {
   ) : null;
 };
 
+interface SpriteGalleryProps {
+  sprites: PokemonSprites;
+}
+const SpriteGallery: FC<SpriteGalleryProps> = ({ sprites }) => {
+  const spritesList: { name: string; url: string }[] = [];
+
+  for (const key in sprites) {
+    if (isPokemonSpriteKey(key)) {
+      const url = sprites[key];
+      if (url !== null) {
+        spritesList[spritesList.length] = {
+          name: key
+            .split('_')
+            .join(' ')
+            .replace('front', 'frnt')
+            .replace('back', 'bk')
+            .replace('female', 'fmle'),
+          url,
+        };
+      }
+    }
+  }
+
+  return spritesList.length ? (
+    <>
+      <div className="border-t-8 border-green">
+        <label
+          htmlFor="sprites"
+          className="pb-2 block bg-green"
+        >
+          OTHER SPRITES:
+        </label>
+        <ul
+          id="sprites"
+          className="border list-none"
+        >
+          {spritesList.map((entry) => (
+            <li
+              key={entry.url}
+              className="block w-1/4 md:w-1/5 lg:w-1/6 float-start relative"
+            >
+              <Image
+                className="w-full h-auto border-r border-b border-green"
+                width={100}
+                height={100}
+                alt={`${entry.name} sprite`}
+                src={entry.url}
+              />
+              <div className="text-green brightness-90 text-[9px] absolute top-0 left-1 z-10">
+                {entry.name}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  ) : null;
+};
+
 const PokemonDisplay = () => {
   const { history, status } = useAppSelector(
     (state) => state.searchHistory.value,
@@ -100,17 +177,23 @@ const PokemonDisplay = () => {
 
   return (
     <ContentPanel status={status}>
-      <Image
-        alt="pokemon"
-        width={500}
-        height={500}
-        className="pokemon-image"
-        src={
-          pokemon.sprites.other?.home?.front_default ??
-          pokemon.sprites.front_default ??
-          '/img/fallback-pokemon.jpg'
-        }
-      />
+      <div className="flex flex-col">
+        <div className="relative mx-auto w-full h-full max-h-[500px] max-w-[500px] aspect-square overflow-hidden object-cover">
+          <Image
+            alt={`Sprite image for pokemon ${pokemon.name}.`}
+            className="mx-auto xl:mx-0"
+            width={500}
+            height={500}
+            priority={true}
+            src={
+              pokemon.sprites.other?.home?.front_default ??
+              pokemon.sprites.front_default ??
+              DEFAULT_IMAGE
+            }
+          />
+        </div>
+        <SpriteGallery sprites={pokemon.sprites} />
+      </div>
       <div className="pokemon-info-panel">
         {displayKeys.map((prop) => (
           <AttributeRow
