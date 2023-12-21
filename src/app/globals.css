@@ -25,3 +25,24 @@ body main {
     @apply outline-none hover:outline-none active:outline-none focus:outline-none focus-within:outline-none;
   }
 }
+
+@layer components {
+  .main {
+    @apply w-10/12 max-w-7xl mx-auto my-3 p-3 h-[calc(100vh-1.5rem)] shadow-dark-gray shadow grid grid-cols-main gap-3;
+  }
+  .left-sidebar {
+    @apply bg-light-gray p-2 h-full overflow-hidden;
+  }
+  .search-button {
+    @apply bg-green hover:[&:not([disabled])]:text-white active:[&:not([disabled])]:brightness-110 p-2 border border-dark-gray border-l-transparent;
+  }
+  .history-entry-button {
+    @apply bg-transparent mt-1 disabled:text-white disabled:bg-green disabled:px-1 hover:bg-yellow hover:px-1;
+  }
+  .pokemon-info-panel {
+    @apply flex flex-col flex-grow text-xl border-t-8 xl:border-t-0 xl:border-l-8 border-green p-3 bg-green;
+  }
+  .pokemon-image {
+    @apply object-contain overflow-hidden aspect-square mx-auto xl:mx-0;
+  }
+}
