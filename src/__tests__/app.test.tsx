@@ -1,4 +1,4 @@
-import { fireEvent } from '@testing-library/react';
+import { act, fireEvent } from '@testing-library/react';
 import { render, screen } from '@testing-library/react';
 import store from '@/redux/store';
 import { Provider } from 'react-redux';
@@ -7,6 +7,7 @@ import { useLazyGetPokemonByNameQuery } from '@/api/pokemonService';
 import Home from '@/app/page';
 import { BaseURL, ENDPOINTS } from '@/types/pokemon';
 import data from './data.json' with { type: 'json' };
+import { nextTick } from 'process';
 
 type LazyGetPokemonByNameReturnType = ReturnType<
   typeof useLazyGetPokemonByNameQuery
@@ -72,6 +73,8 @@ describe('App', () => {
 
     const contentLoading = await screen.findByTestId('content-loading');
     expect(contentLoading).toBeInTheDocument();
+
+    await new Promise(process.nextTick);
 
     const contentError = await screen.findByTestId('content-error');
     expect(contentError).toBeInTheDocument();
