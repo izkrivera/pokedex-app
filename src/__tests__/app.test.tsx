@@ -1,4 +1,4 @@
-import { act, fireEvent } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import { render, screen } from '@testing-library/react';
 import store from '@/redux/store';
 import { Provider } from 'react-redux';
@@ -29,15 +29,16 @@ beforeAll(() => {
       });
     },
   );
-  fetchMock.mockOnceIf(
-    `${BaseURL.REST}/${ENDPOINTS.POKEMON}/${errorName}`,
-    () => {
-      return Promise.resolve({
-        status: 200,
-        body: JSON.stringify({ data: 'Not Found' }),
-      });
-    },
-  );
+  fetchMock.mockIf(`${BaseURL.REST}/${ENDPOINTS.POKEMON}/${errorName}`, () => {
+    return Promise.resolve({
+      status: 200,
+      body: JSON.stringify({ data: 'Not Found' }),
+    });
+  });
+});
+
+afterEach(() => {
+  fetchMock.mockClear();
 });
 
 describe('App', () => {
@@ -52,31 +53,6 @@ describe('App', () => {
     expect(screen.getByTestId('search-form')).toBeInTheDocument();
     expect(screen.getByTestId('content-panel')).toBeInTheDocument();
     expect(screen.getByTestId('content-initial')).toBeInTheDocument();
-  });
-
-  it('renders content loading, content  success & search history components after fetch', async () => {
-    render(<Home />);
-
-    const searchInput = screen.getByTestId('search-input') as HTMLInputElement;
-    expect(searchInput).toBeInTheDocument();
-
-    fireEvent.change(searchInput, { target: { value: pokemonName } });
-
-    const searchSubmit = screen.getByTestId(
-      'search-submit',
-    ) as HTMLButtonElement;
-    expect(searchSubmit).toBeInTheDocument();
-
-    fireEvent.click(searchSubmit);
-
-    const contentLoading = await screen.findByTestId('content-loading');
-    expect(contentLoading).toBeInTheDocument();
-
-    const contentSuccess = await screen.findByTestId('content-success');
-    expect(contentSuccess).toBeInTheDocument();
-
-    const searchHistory = await screen.findByTestId('search-history');
-    expect(searchHistory).toBeInTheDocument();
   });
 
   it('renders content error component after bad fetch', async () => {
@@ -99,5 +75,33 @@ describe('App', () => {
 
     const contentError = await screen.findByTestId('content-error');
     expect(contentError).toBeInTheDocument();
+  });
+
+  it('renders content loading, content success & search history components after fetch', async () => {
+    render(<Home />);
+
+    const searchInput = screen.getByTestId('search-input') as HTMLInputElement;
+    expect(searchInput).toBeInTheDocument();
+
+    fireEvent.change(searchInput, { target: { value: pokemonName } });
+
+    const searchSubmit = screen.getByTestId(
+      'search-submit',
+    ) as HTMLButtonElement;
+    expect(searchSubmit).toBeInTheDocument();
+
+    fireEvent.click(searchSubmit);
+
+    const contentLoading = await screen.findByTestId('content-loading');
+    expect(contentLoading).toBeInTheDocument();
+
+    const contentSuccess = await screen.findByTestId('content-success');
+    expect(contentSuccess).toBeInTheDocument();
+
+    const nameContainer = await screen.findByTestId('attribute-name');
+    expect(nameContainer).toBeInTheDocument();
+
+    const searchHistory = await screen.findByTestId('search-history');
+    expect(searchHistory).toBeInTheDocument();
   });
 });

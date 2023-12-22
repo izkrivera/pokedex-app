@@ -40,7 +40,12 @@ const AttributeRow: FC<AttributeRowProps> = ({ name, value }) => {
   return (
     <div className="flex flex-row">
       <div className={`w-40 flex-shrink-0`}>{`${name}${value && ':'}`}</div>
-      <div className="flex-grow">{value}</div>
+      <div
+        className="flex-grow"
+        data-testid={`attribute-${name.toLowerCase()}`}
+      >
+        {value}
+      </div>
     </div>
   );
 };
@@ -200,7 +205,10 @@ const PokemonDisplay = () => {
         </div>
         <SpriteGallery sprites={pokemon.sprites} />
       </div>
-      <div className="pokemon-info-panel">
+      <div
+        className="pokemon-info-panel"
+        data-testid="pokemon-info-panel"
+      >
         {displayKeys.map((prop) => (
           <AttributeRow
             key={`${pokemon.id}-${prop}`}

@@ -49,6 +49,7 @@ const SearchForm = () => {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (searchName) {
       getPokemonByName(searchName, true);
     }
