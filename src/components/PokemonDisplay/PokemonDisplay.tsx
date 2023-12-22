@@ -68,7 +68,12 @@ const ContentPanel: FC<ContentPanelProps> = ({ children, status }) => {
       className="h-full overflow-hidden"
       data-testid="content-panel"
     >
-      <div className={statusToClassNames[status]}>{children}</div>
+      <div
+        data-testid={`content-${status}`}
+        className={statusToClassNames[status]}
+      >
+        {children}
+      </div>
     </section>
   );
 };
