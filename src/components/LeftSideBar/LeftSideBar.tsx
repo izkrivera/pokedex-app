@@ -49,6 +49,7 @@ const SearchForm = () => {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     if (searchName) {
       getPokemonByName(searchName, true);
     }
@@ -57,7 +58,7 @@ const SearchForm = () => {
   }
 
   return (
-    <search data-testid="search-form">
+    <div data-testid="search-form">
       <form onSubmit={handleSubmit}>
         <label
           className="block"
@@ -67,6 +68,7 @@ const SearchForm = () => {
         </label>
         <div className="flex">
           <input
+            data-testid="search-input"
             className="border p-2 w-full"
             id="search"
             name="search"
@@ -81,6 +83,7 @@ const SearchForm = () => {
             autoComplete="off"
           />
           <button
+            data-testid="search-submit"
             type="submit"
             className="search-button"
             disabled={searchName.length === 0 || loading}
@@ -89,7 +92,7 @@ const SearchForm = () => {
           </button>
         </div>
       </form>
-    </search>
+    </div>
   );
 };
 
