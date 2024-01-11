@@ -132,38 +132,36 @@ const SpriteGallery: FC<SpriteGalleryProps> = ({ sprites }) => {
   }
 
   return spritesList.length ? (
-    <>
-      <div className="border-t-8 border-green">
-        <label
-          htmlFor="sprites"
-          className="pb-2 block bg-green"
-        >
-          OTHER SPRITES:
-        </label>
-        <ul
-          id="sprites"
-          className="border list-none"
-        >
-          {spritesList.map((entry) => (
-            <li
-              key={entry.url}
-              className="block w-1/4 md:w-1/5 lg:w-1/6 float-start relative"
-            >
-              <Image
-                className="w-full h-auto border-r border-b border-green"
-                width={100}
-                height={100}
-                alt={`${entry.name} sprite`}
-                src={entry.url}
-              />
-              <div className="text-green brightness-90 text-[9px] absolute top-0 left-1 z-10">
-                {entry.name}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
+    <div className="border-t-8 border-green">
+      <label
+        htmlFor="sprites"
+        className="pb-2 block bg-green"
+      >
+        OTHER SPRITES:
+      </label>
+      <ul
+        id="sprites"
+        className="border list-none"
+      >
+        {spritesList.map((entry) => (
+          <li
+            key={entry.url}
+            className="block w-1/4 md:w-1/5 lg:w-1/6 float-start relative"
+          >
+            <Image
+              className="w-full h-auto border-r border-b border-green"
+              width={100}
+              height={100}
+              alt={`${entry.name} sprite`}
+              src={entry.url}
+            />
+            <div className="text-green brightness-90 text-[9px] absolute top-0 left-1 z-10">
+              {entry.name}
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
   ) : null;
 };
 
