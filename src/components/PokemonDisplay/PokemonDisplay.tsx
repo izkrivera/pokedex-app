@@ -11,7 +11,7 @@ type PokemonProps = {
   [K in PokemonKeys]: Pokemon[K];
 };
 
-const displayKeys: PokemonKeys[] = ['name', 'height', 'weight'] as const;
+const displayKeys: PokemonKeys[] = ['name', 'height', 'weight'];
 
 type PokemonSpriteKeys = Exclude<keyof PokemonSprites, 'other' | 'versions'> &
   string;
